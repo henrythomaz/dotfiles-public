@@ -1,16 +1,6 @@
-![fish screenshot](./images/screenshot-1.png)
-
-![nvim screenshot](./images/screenshot-neovim.png)
-
-# Takuya's dotfiles
+# Henry's dotfiles
 
 **Warning**: Don’t blindly use my settings unless you know what that entails. Use at your own risk!
-
-### Looking for a Markdown note-taking app?
-
-Check out my app called [Inkdrop](https://www.inkdrop.app/)
-
-[![Inkdrop](./images/screenshot-inkdrop.png)](https://www.inkdrop.app/)
 
 ## Contents
 
@@ -72,9 +62,3 @@ Watch my video tutorials:
    - [Blogpost](https://dev.to/craftzdog/a-productive-command-line-git-workflow-for-indie-app-developers-k7d)
 1. [My Fish shell workflow for coding](https://www.youtube.com/watch?v=KKxhf50FIPI)
 1. [How to set up PowerShell prompt with Oh My Posh on Windows 11](https://www.youtube.com/watch?v=5-aK2_WwrmM)
-
-## About me
-
-- [@inkdrop_app on X](https://twitter.com/inkdrop_app)
-- [Newsletters](https://www.devas.life/)
-- [My product: Inkdrop - Markdown note-taking app](https://www.inkdrop.app/)
