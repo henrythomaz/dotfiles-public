@@ -58,9 +58,16 @@ keymap.set("n", "<C-w><right>", "<C-w>>")
 keymap.set("n", "<C-w><up>", "<C-w>+")
 keymap.set("n", "<C-w><down>", "<C-w>-")
 
+-- Close Terminal
+keymap.set("t", "jj", [[<C-\><C-n>]], { silent = true })
+
 -- Diagnostics
 keymap.set("n", "<C-j>", function()
-	vim.diagnostic.goto_next()
+	vim.diagnostic.jump({ count = 1 })
+end, opts)
+
+keymap.set("n", "<C-k>", function()
+	vim.diagnostic.jump({ count = -1 })
 end, opts)
 
 keymap.set("n", "<leader>r", function()
