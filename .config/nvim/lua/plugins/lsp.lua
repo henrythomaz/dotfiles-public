@@ -1,5 +1,5 @@
 return {
-	-- tools
+	-- Mason (instalador de tools / LSPs)
 	{
 		"mason-org/mason.nvim",
 		opts = function(_, opts)
@@ -16,24 +16,43 @@ return {
 		end,
 	},
 
-	-- lsp servers
+	-- LSP config
 	{
 		"neovim/nvim-lspconfig",
 		opts = {
 			inlay_hints = { enabled = false },
-			---@type lspconfig.options
+
 			servers = {
+				-- Global keymaps for ALL LSPs
+				["*"] = {
+					keys = {
+						{
+							"gd",
+							function()
+								require("telescope.builtin").lsp_definitions({
+									reuse_win = false,
+								})
+							end,
+							desc = "Goto Definition",
+							has = "definition",
+						},
+					},
+				},
+
 				cssls = {},
+
 				tailwindcss = {
 					root_dir = function(...)
 						return require("lspconfig.util").root_pattern(".git")(...)
 					end,
 				},
+
 				tsserver = {
 					root_dir = function(...)
 						return require("lspconfig.util").root_pattern(".git")(...)
 					end,
 					single_file_support = false,
+
 					settings = {
 						typescript = {
 							inlayHints = {
@@ -59,7 +78,9 @@ return {
 						},
 					},
 				},
+
 				html = {},
+
 				yamlls = {
 					settings = {
 						yaml = {
@@ -67,8 +88,8 @@ return {
 						},
 					},
 				},
+
 				lua_ls = {
-					-- enabled = false,
 					single_file_support = true,
 					settings = {
 						Lua = {
@@ -79,11 +100,6 @@ return {
 								workspaceWord = true,
 								callSnippet = "Both",
 							},
-							misc = {
-								parameters = {
-									-- "--log-level=trace",
-								},
-							},
 							hint = {
 								enable = true,
 								setType = false,
@@ -92,32 +108,28 @@ return {
 								semicolon = "Disable",
 								arrayIndex = "Disable",
 							},
-							doc = {
-								privateName = { "^_" },
-							},
-							type = {
-								castNumberToInteger = true,
-							},
 							diagnostics = {
-								disable = { "incomplete-signature-doc", "trailing-space" },
-								-- enable = false,
+								disable = {
+									"incomplete-signature-doc",
+									"trailing-space",
+								},
 								groupSeverity = {
 									strong = "Warning",
 									strict = "Warning",
 								},
 								groupFileStatus = {
-									["ambiguity"] = "Opened",
-									["await"] = "Opened",
-									["codestyle"] = "None",
-									["duplicate"] = "Opened",
-									["global"] = "Opened",
-									["luadoc"] = "Opened",
-									["redefined"] = "Opened",
-									["strict"] = "Opened",
-									["strong"] = "Opened",
+									ambiguity = "Opened",
+									await = "Opened",
+									codestyle = "None",
+									duplicate = "Opened",
+									global = "Opened",
+									luadoc = "Opened",
+									redefined = "Opened",
+									strict = "Opened",
+									strong = "Opened",
 									["type-check"] = "Opened",
-									["unbalanced"] = "Opened",
-									["unused"] = "Opened",
+									unbalanced = "Opened",
+									unused = "Opened",
 								},
 								unusedLocalExclude = { "_*" },
 							},
@@ -133,24 +145,6 @@ return {
 					},
 				},
 			},
-			setup = {},
 		},
-	},
-	{
-		"neovim/nvim-lspconfig",
-		opts = function()
-			local keys = require("lazyvim.plugins.lsp.keymaps").get()
-			vim.list_extend(keys, {
-				{
-					"gd",
-					function()
-						-- DO NOT RESUSE WINDOW
-						require("telescope.builtin").lsp_definitions({ reuse_win = false })
-					end,
-					desc = "Goto Definition",
-					has = "definition",
-				},
-			})
-		end,
 	},
 }
