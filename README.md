@@ -53,12 +53,12 @@
 
 ## How to use
 
-Watch my video tutorials:
+See the tutorials I used:
 
-1. [My Neovim setup](https://www.youtube.com/watch?v=fFHlfbKVi30)
+1. [Neovim setup](https://www.youtube.com/watch?v=fFHlfbKVi30)
    - [Article version](https://www.devas.life/effective-neovim-setup-for-web-development-towards-2024/)
-1. [My dev workflow using tmux and vim](https://www.youtube.com/watch?v=sSOfr2MtRU8&list=PLxQA0uNgQDCICMRwlOzWAZBPL05XBC_br&index=10)
+1. [dev workflow using tmux and vim](https://www.youtube.com/watch?v=sSOfr2MtRU8&list=PLxQA0uNgQDCICMRwlOzWAZBPL05XBC_br&index=10)
 1. [A productive command-line Git workflow for indie app developers](https://www.youtube.com/watch?v=qKpY7t5m35k&list=PLxQA0uNgQDCICMRwlOzWAZBPL05XBC_br&index=4)
    - [Blogpost](https://dev.to/craftzdog/a-productive-command-line-git-workflow-for-indie-app-developers-k7d)
-1. [My Fish shell workflow for coding](https://www.youtube.com/watch?v=KKxhf50FIPI)
+1. [Fish shell workflow for coding](https://www.youtube.com/watch?v=KKxhf50FIPI)
 1. [How to set up PowerShell prompt with Oh My Posh on Windows 11](https://www.youtube.com/watch?v=5-aK2_WwrmM)
