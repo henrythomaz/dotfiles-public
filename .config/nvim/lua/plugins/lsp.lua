@@ -1,5 +1,4 @@
 return {
-	-- Mason (instalador de tools / LSPs)
 	{
 		"mason-org/mason.nvim",
 		opts = function(_, opts)
@@ -16,14 +15,12 @@ return {
 		end,
 	},
 
-	-- LSP config
 	{
 		"neovim/nvim-lspconfig",
 		opts = {
 			inlay_hints = { enabled = false },
 
 			servers = {
-				-- Global keymaps for ALL LSPs
 				["*"] = {
 					keys = {
 						{
@@ -52,7 +49,6 @@ return {
 						return require("lspconfig.util").root_pattern(".git")(...)
 					end,
 					single_file_support = false,
-
 					settings = {
 						typescript = {
 							inlayHints = {
