@@ -1,12 +1,16 @@
 return {
 	{
-		"craftzdog/solarized-osaka.nvim",
-		lazy = true,
+		"loctvl842/monokai-pro.nvim",
+		lazy = false,
 		priority = 1000,
-		opts = function()
-			return {
-				transparent = true,
-			}
-		end,
+		opts = {
+			transparent_background = true,
+			terminal_colors = true,
+			devicons = true,
+			styles = {
+				comment = { italic = true },
+				keyword = { italic = true },
+			},
+		},
 	},
 }
