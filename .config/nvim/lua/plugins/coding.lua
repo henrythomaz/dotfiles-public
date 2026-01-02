@@ -22,14 +22,14 @@ return {
 		end,
 	},
 
-	-- Better increase/descrease
+	-- Better increase/decrease
 	{
 		"monaqa/dial.nvim",
-    -- stylua: ignore
-    keys = {
-      { "<C-a>", function() return require("dial.map").inc_normal() end, expr = true, desc = "Increment" },
-      { "<C-x>", function() return require("dial.map").dec_normal() end, expr = true, desc = "Decrement" },
-    },
+		-- stylua: ignore
+		keys = {
+			{ "<C-a>", function() return require("dial.map").inc_normal() end, expr = true, desc = "Increment" },
+			{ "<C-x>", function() return require("dial.map").dec_normal() end, expr = true, desc = "Decrement" },
+		},
 		config = function()
 			local augend = require("dial.augend")
 			require("dial.config").augends:register_group({
@@ -45,7 +45,7 @@ return {
 		end,
 	},
 
-	-- copilot
+	-- Copilot (desabilitado)
 	{
 		"zbirenbaum/copilot.lua",
 		enabled = false,
