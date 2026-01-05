@@ -78,6 +78,18 @@
     "key": "leader r",
     "command": "editor.action.rename",
     "when": "vim.mode == 'Normal'"
+  },
+  {
+  "key": "ctrl+alt+z",
+  "command": "workbench.action.toggleZenMode"
+  },
+  {
+    "key": "ctrl+k t",
+    "command": "workbench.action.terminal.focus"
+  },
+  {
+    "key": "ctrl+k e",
+    "command": "workbench.action.focusActiveEditorGroup"
   }
 ]
 
