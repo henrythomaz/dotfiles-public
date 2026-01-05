@@ -1,0 +1,102 @@
+{
+  "workbench.colorTheme": "Monokai Pro",
+  "workbench.iconTheme": "material-icon-theme",
+
+  "material-icon-theme.hidesExplorerArrows": true,
+  "workbench.tree.renderIndentGuides": "none",
+
+  "workbench.sideBar.location": "right",
+  "workbench.activityBar.location": "hidden",
+  "workbench.statusBar.visible": true,
+
+  "workbench.editor.showTabs": "multiple",
+  "workbench.layoutControl.enabled": false,
+  "workbench.startupEditor": "none",
+  "workbench.tips.enabled": false,
+
+  "editor.fontFamily": "Dank Mono",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 1.8,
+  "editor.fontLigatures": true,
+
+  "editor.minimap.enabled": true,
+  "editor.guides.indentation": true,
+  "editor.renderWhitespace": "none",
+  "editor.renderLineHighlight": "gutter",
+  "editor.matchBrackets": "always",
+
+  "editor.cursorBlinking": "solid",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorStyle": "line",
+  "editor.cursorWidth": 2,
+
+  "editor.lightbulb.enabled": "off",
+  "editor.hover.enabled": "on",
+  "editor.showFoldingControls": "mouseover",
+
+  "editor.scrollbar.horizontal": "hidden",
+  "editor.scrollbar.vertical": "hidden",
+  "editor.overviewRulerBorder": false,
+
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+
+  "breadcrumbs.enabled": false,
+
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false,
+  "explorer.compactFolders": false,
+  "explorer.decorations.colors": false,
+
+  "git.decorations.enabled": true,
+  "scm.diffDecorations": "none",
+
+  "files.insertFinalNewline": true,
+  "extensions.ignoreRecommendations": true,
+
+  "terminal.integrated.fontFamily": "Dank Mono, JetBrainsMono Nerd Font",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.lineHeight": 1.5,
+  "terminal.integrated.tabs.enabled": true,
+
+  "window.titleBarStyle": "custom",
+
+  "apc.electron": {
+    "titleBarStyle": "hiddenInset"
+  },
+
+  "apc.font.family": "Dank Mono",
+
+  "apc.listRow": {
+    "lists": ["explorer-folders-view", "quick-input-list", "results"],
+    "height": 30
+  },
+
+  "apc.stylesheet": {
+    ".title-actions": "display: none !important",
+    ".panel .composite.title": "visibility: hidden !important",
+
+    ".sidebar": "border: none !important; background-color: #221f22 !important",
+    ".sidebar .title-label h2": "color: #f8f8f2 !important",
+
+    ".monaco-editor .scroll-decoration": "display: none !important",
+    ".monaco-scrollable-element > .shadow.top": "display: none !important",
+
+    ".monaco-editor .cursors-layer .cursor": "background-color: #f92672 !important",
+
+    ".monaco-list-row:hover": "background-color: #2d2a2e !important",
+    ".monaco-list-row.selected": "background-color: #403e41 !important",
+
+    ".monaco-editor .line-numbers": "color: #75715e !important",
+    ".monaco-editor .current-line": "background-color: #2a2a2a !important"
+  },
+
+  "workbench.colorCustomizations": {
+    "terminal.background": "#00000000"
+  },
+
+  "workbench.settings.applyToAllProfiles": [
+    "workbench.colorCustomizations"
+  ],
+  "glassit.alpha": 220
+}
