@@ -59,6 +59,27 @@
   "terminal.integrated.lineHeight": 1.5,
   "terminal.integrated.tabs.enabled": true,
 
+  "vim.disableExtensionInTerminal": true,
+  "vim.disableExtensionInPanel": true,
+
+  "vim.useSystemClipboard": true,
+  "vim.hlsearch": true,
+  "vim.incsearch": true,
+  "vim.smartRelativeLine": true,
+  "vim.leader": " ",
+
+  "vim.handleKeys": {
+    "<C-a>": false,
+    "<C-f>": false,
+    "<C-k>": false,
+    "<C-c>": false,
+    "<C-v>": false
+  },
+
+  "vim.useCtrlKeys": true,
+  "vim.enableNeovim": false,
+
+
   "window.titleBarStyle": "custom",
 
   "apc.electron": {
@@ -100,3 +121,4 @@
   ],
   "glassit.alpha": 220
 }
+
