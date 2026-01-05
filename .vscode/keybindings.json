@@ -1,0 +1,83 @@
+[
+  {
+    "key": "ctrl+d ctrl+a",
+    "command": "editor.action.addCommentLine",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+k ctrl+c",
+    "command": "-editor.action.addCommentLine",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+alt+u",
+    "command": "remote-wsl.newWindow"
+  },
+  {
+    "key": "ctrl+k t",
+    "command": "workbench.action.terminal.focus",
+    "when": "!terminalFocus"
+  },
+    {
+    "key": "ctrl+h",
+    "command": "workbench.action.focusLeftGroup"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.focusBelowGroup"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "workbench.action.focusAboveGroup"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "workbench.action.focusRightGroup"
+  },
+  {
+  "key": "s v",
+  "command": "workbench.action.splitEditorRight",
+  "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "s s",
+    "command": "workbench.action.splitEditorDown",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+  "key": "tab",
+  "command": "workbench.action.nextEditor",
+  "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "shift+tab",
+    "command": "workbench.action.previousEditor",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+  "key": "space e",
+  "command": "workbench.view.explorer",
+  "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "space t",
+    "command": "workbench.action.terminal.focus",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "space c",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+  "key": "g d",
+  "command": "editor.action.revealDefinition",
+  "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "leader r",
+    "command": "editor.action.rename",
+    "when": "vim.mode == 'Normal'"
+  }
+]
+
