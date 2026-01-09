@@ -5,21 +5,21 @@ if not vim.loop.fs_stat(lazypath) then
 		"clone",
 		"--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
+		"--branch=stable",
 		lazypath,
 	})
 end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	spec = {
-		{
-			"LazyVim/LazyVim",
+  spec = {
+    {
+      "LazyVim/LazyVim",
 			import = "lazyvim.plugins",
 			opts = {
-				colorscheme = "monokai-pro-octagon",
+        colorscheme = "sonokai",
 				news = {
-					lazyvim = true,
+          lazyvim = true,
 					neovim = true,
 				},
 			},
@@ -28,26 +28,29 @@ require("lazy").setup({
 		{ import = "lazyvim.plugins.extras.formatting.prettier" },
 		{ import = "lazyvim.plugins.extras.lang.typescript" },
 		{ import = "lazyvim.plugins.extras.lang.json" },
-		{ import = "lazyvim.plugins.extras.lang.rust" },
 		{ import = "lazyvim.plugins.extras.lang.tailwind" },
+		-- { import = "lazyvim.plugins.extras.coding.copilot" },
 		{ import = "lazyvim.plugins.extras.util.mini-hipatterns" },
 		{ import = "plugins" },
 	},
 	defaults = {
-		lazy = false,
+    lazy = false,
 		version = false,
 	},
 	dev = {
-		path = "~/.ghq/github.com",
+    path = "~/.ghq/github.com",
 	},
 	checker = { enabled = true },
+  rocks = {
+    enabled = false,
+  },
 	performance = {
-		cache = {
-			enabled = true,
+    cache = {
+      enabled = true,
 		},
 		rtp = {
-			disabled_plugins = {
-				"gzip",
+      disabled_plugins = {
+        "gzip",
 				-- "matchit",
 				-- "matchparen",
 				"netrwPlugin",
@@ -57,13 +60,6 @@ require("lazy").setup({
 				"tutor",
 				"zipPlugin",
 			},
-		},
-	},
-	ui = {
-		custom_keys = {
-			["<localleader>d"] = function(plugin)
-				dd(plugin)
-			end,
 		},
 	},
 	debug = false,

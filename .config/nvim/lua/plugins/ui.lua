@@ -1,5 +1,13 @@
 return {
-	-- mensagens, cmdline e popupmenu
+	{
+		"nvimdev/dashboard-nvim",
+		enabled = false,
+	},
+	{
+		"nvim-lualine/lualine.nvim",
+		enabled = false,
+	},
+	-- messages, cmdline and the popupmenu
 	{
 		"folke/noice.nvim",
 		opts = function(_, opts)
@@ -10,7 +18,6 @@ return {
 				},
 				opts = { skip = true },
 			})
-
 			local focused = true
 			vim.api.nvim_create_autocmd("FocusGained", {
 				callback = function()
@@ -22,7 +29,6 @@ return {
 					focused = false
 				end,
 			})
-
 			table.insert(opts.routes, 1, {
 				filter = {
 					cond = function()
@@ -33,153 +39,174 @@ return {
 				opts = { stop = false },
 			})
 
-			opts.presets = opts.presets or {}
+			opts.commands = {
+				all = {
+					-- options for the message history that you get with `:Noice`
+					view = "split",
+					opts = { enter = true, format = "details" },
+					filter = {},
+				},
+			}
+
 			opts.presets.lsp_doc_border = true
 		end,
 	},
 
 	{
 		"rcarriga/nvim-notify",
-		opts = { timeout = 5000 },
+		opts = {
+			timeout = 5000,
+			background_colour = "#000000",
+			render = "wrapped-compact",
+		},
 	},
 
-	-- Ícones (obrigatório)
-	{
-		"nvim-tree/nvim-web-devicons",
-		lazy = true,
-	},
-
-	-- BUFFERLINE: abas tipo Chrome
+	-- buffer line
 	{
 		"akinsho/bufferline.nvim",
 		event = "VeryLazy",
-		dependencies = "nvim-tree/nvim-web-devicons",
 		keys = {
 			{ "<Tab>", "<Cmd>BufferLineCycleNext<CR>", desc = "Next tab" },
 			{ "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", desc = "Prev tab" },
 		},
 		opts = {
 			options = {
-				mode = "buffers",
-				separator_style = "thin",
-				always_show_bufferline = true,
-				show_buffer_close_icons = true,
+				mode = "tabs",
+				show_buffer_close_icons = false,
 				show_close_icon = false,
-				color_icons = true,
-				diagnostics = "nvim_lsp",
-				offsets = {
-					{
-						filetype = "neo-tree",
-						text = "Explorer",
-						highlight = "Directory",
-						separator = true,
-					},
-				},
-			},
-			highlights = {
-				fill = { bg = "NONE" },
-				background = { bg = "NONE" },
-				tab = { bg = "NONE" },
-				tab_selected = { fg = "#ffd866", bold = true },
-				separator = { fg = "#3b3a32", bg = "NONE" },
-				separator_selected = { fg = "#ffd866" },
 			},
 		},
 	},
 
-	-- NEOTREE
-	{
-		"nvim-neo-tree/neo-tree.nvim",
-		opts = {
-			window = {
-				position = "left",
-				width = 32,
-				border = "rounded",
-			},
-			filesystem = {
-				filtered_items = {
-					visible = true,
-				},
-			},
-			default_component_configs = {
-				container = {
-					enable_character_fade = false,
-				},
-			},
-		},
-	},
-
-	-- INCLINE (filename flutuando no topo)
+	-- filename
 	{
 		"b0o/incline.nvim",
+		dependencies = {},
 		event = "BufReadPre",
 		priority = 1200,
 		config = function()
+			local helpers = require("incline.helpers")
 			require("incline").setup({
-				window = { margin = { vertical = 0, horizontal = 1 } },
-				hide = { cursorline = true },
+				window = {
+					padding = 0,
+					margin = { horizontal = 0 },
+				},
 				render = function(props)
 					local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-					local icon, color = require("nvim-web-devicons").get_icon_color(filename)
-					return {
-						{ icon, guifg = color },
-						{ " " },
-						{ filename, gui = vim.bo[props.buf].modified and "bold" or nil },
+					local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
+					local modified = vim.bo[props.buf].modified
+					local buffer = {
+						ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) }
+							or "",
+						" ",
+						{ filename, gui = modified and "bold,italic" or "bold" },
+						" ",
+						guibg = "#363944",
 					}
+					return buffer
 				end,
 			})
 		end,
 	},
-
-	-- LUALINE (Monokai Pro)
+	-- LazyGit integration with Telescope
 	{
-		"nvim-lualine/lualine.nvim",
-		event = "VeryLazy",
-		dependencies = "nvim-tree/nvim-web-devicons",
-		opts = {
-			options = {
-				theme = "monokai-pro",
-				globalstatus = true,
-				section_separators = { left = "", right = "" },
-				component_separators = { left = "", right = "" },
-			},
-		},
-	},
-
-	-- ZEN MODE
-	{
-		"folke/zen-mode.nvim",
-		cmd = "ZenMode",
-		opts = {
-			plugins = {
-				gitsigns = true,
-				tmux = true,
-				kitty = { enabled = false },
-			},
-		},
+		"kdheepak/lazygit.nvim",
 		keys = {
-			{ "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" },
-		},
-	},
-	-- SNACKS (com explorer desabilitado)
-	{
-		"folke/snacks.nvim",
-		opts = {
-			-- Desabilita o explorer do Snacks
-			explorer = { enabled = false },
-
-			dashboard = {
-				preset = {
-					header = [[
-     ██╗  ██╗███████╗███╗   ██╗██████╗ ██╗   ██╗
-     ██║  ██║██╔════╝████╗  ██║██╔══██╗╚██╗ ██╔╝
-     ███████║█████╗  ██╔██╗ ██║██████╔╝ ╚████╔╝ 
-     ██╔══██║██╔══╝  ██║╚██╗██║██╔══██╗  ╚██╔╝  
-     ██║  ██║███████╗██║ ╚████║██║  ██║   ██║   
-     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝   
-]],
-				},
+			{
+				";c",
+				":LazyGit<Return>",
+				silent = true,
+				noremap = true,
 			},
 		},
+		-- optional for floating window border decoration
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+	},
+	{
+		"kristijanhusak/vim-dadbod-ui",
+		dependencies = {
+			{ "tpope/vim-dadbod", lazy = true },
+			{ "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
+		},
+		cmd = {
+			"DBUI",
+			"DBUIToggle",
+			"DBUIAddConnection",
+			"DBUIFindBuffer",
+		},
+		init = function()
+			-- Your DBUI configuration
+			vim.g.db_ui_use_nerd_fonts = 1
+		end,
+		keys = {
+			{
+
+				"<leader>d",
+				"<cmd>NvimTreeClose<cr><cmd>tabnew<cr><bar><bar><cmd>DBUI<cr>",
+			},
+		},
+	},
+	{
+		"nvim-tree/nvim-tree.lua",
+		config = function()
+			require("nvim-tree").setup({
+				on_attach = function(bufnr)
+					local api = require("nvim-tree.api")
+
+					local function opts(desc)
+						return {
+							desc = "nvim-tree: " .. desc,
+							buffer = bufnr,
+							noremap = true,
+							silent = true,
+							nowait = true,
+						}
+					end
+
+					-- default mappings
+					api.config.mappings.default_on_attach(bufnr)
+
+					-- custom mappings
+					vim.keymap.set("n", "t", api.node.open.tab, opts("Tab"))
+				end,
+				actions = {
+					open_file = {
+						quit_on_open = true,
+					},
+				},
+				sort = {
+					sorter = "case_sensitive",
+				},
+				view = {
+					width = 30,
+					relativenumber = true,
+				},
+				renderer = {
+					group_empty = true,
+				},
+				filters = {
+					dotfiles = true,
+					custom = {
+						"node_modules/.*",
+					},
+				},
+				log = {
+					enable = true,
+					truncate = true,
+					types = {
+						diagnostics = true,
+						git = true,
+						profile = true,
+						watcher = true,
+					},
+				},
+			})
+
+			if vim.fn.argc(-1) == 0 then
+				vim.cmd("NvimTreeFocus")
+			end
+		end,
 	},
 }

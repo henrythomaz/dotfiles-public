@@ -1,16 +1,12 @@
 return {
 	{
-		"loctvl842/monokai-pro.nvim",
-		lazy = false,
+		"sainnhe/sonokai",
 		priority = 1000,
-		opts = {
-			transparent_background = true,
-			terminal_colors = true,
-			devicons = true,
-			styles = {
-				comment = { italic = true },
-				keyword = { italic = true },
-			},
-		},
+		config = function()
+			vim.g.sonokai_transparent_background = "1"
+			vim.g.sonokai_enable_italic = "1"
+			vim.g.sonokai_style = "andromeda"
+			vim.cmd.colorscheme("sonokai")
+		end,
 	},
 }
