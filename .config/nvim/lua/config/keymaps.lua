@@ -15,6 +15,9 @@ keymap.set("n", "<Leader>w", ":update<Return>", opts)
 keymap.set("n", "<Leader>q", ":quit<Return>", opts)
 keymap.set("n", "<Leader>Q", ":qa<Return>", opts)
 
+-- File explorer with Neo-tree
+keymap.set("n", "<Leader>e", "<cmd>Neotree toggle<cr>", opts)
+keymap.set("n", "<Leader>E", "<cmd>Neotree reveal<cr>", opts)
 
 -- Tabs
 keymap.set("n", "te", ":tabedit")

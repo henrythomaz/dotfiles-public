@@ -12,14 +12,15 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  spec = {
-    {
-      "LazyVim/LazyVim",
+	spec = {
+		{
+			"LazyVim/LazyVim",
 			import = "lazyvim.plugins",
 			opts = {
-        colorscheme = "sonokai",
+				ui = { backdrop = 100 },
+				colorscheme = "sonokai",
 				news = {
-          lazyvim = true,
+					lazyvim = true,
 					neovim = true,
 				},
 			},
@@ -34,23 +35,23 @@ require("lazy").setup({
 		{ import = "plugins" },
 	},
 	defaults = {
-    lazy = false,
+		lazy = false,
 		version = false,
 	},
 	dev = {
-    path = "~/.ghq/github.com",
+		path = "~/.ghq/github.com",
 	},
 	checker = { enabled = true },
-  rocks = {
-    enabled = false,
-  },
+	rocks = {
+		enabled = false,
+	},
 	performance = {
-    cache = {
-      enabled = true,
+		cache = {
+			enabled = true,
 		},
 		rtp = {
-      disabled_plugins = {
-        "gzip",
+			disabled_plugins = {
+				"gzip",
 				-- "matchit",
 				-- "matchparen",
 				"netrwPlugin",
