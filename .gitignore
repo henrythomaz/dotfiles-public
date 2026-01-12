@@ -83,3 +83,6 @@ Pods/
 .config/nvim/lazy-lock.json
 .config/nvim/lazyvim.json
 .config/nvim/.luarc.json
+
+# Temporary vim/editor files
+*command*
