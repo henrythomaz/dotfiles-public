@@ -4,10 +4,10 @@ return {
 		tag = "v0.9.1",
 		opts = {
 			ensure_installed = {
-        "astro",
-        "go",
-        "cmake",
-        "fish",
+				"astro",
+				"go",
+				"cmake",
+				"fish",
 				"javascript",
 				"typescript",
 				"css",
