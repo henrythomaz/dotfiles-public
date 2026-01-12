@@ -1,10 +1,9 @@
 return {
 	"nvim-neo-tree/neo-tree.nvim",
-	-- 🚫 Desabilitar lazy loading para ter controle total
-	lazy = true,
+	-- Remover o lazy = true para carregar automaticamente
 	keys = {
 		{ "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle Neo-tree" },
-		{ "<leader>fe", "<cmd>Neotree reveal<cr>", desc = "Reveal in Neo-tree" },
+		{ "<leader>E", "<cmd>Neotree reveal<cr>", desc = "Reveal in Neo-tree" },
 	},
 	opts = {
 		filesystem = {
