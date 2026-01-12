@@ -1,7 +1,7 @@
 return {
 	{
 		"nvimdev/dashboard-nvim",
-		enabled = false,
+		enabled = true, -- ✅ HABILITAR O DASHBOARD
 	},
 	{
 		"nvim-lualine/lualine.nvim",
@@ -41,7 +41,6 @@ return {
 
 			opts.commands = {
 				all = {
-					-- options for the message history that you get with `:Noice`
 					view = "split",
 					opts = { enter = true, format = "details" },
 					filter = {},
@@ -119,7 +118,6 @@ return {
 				noremap = true,
 			},
 		},
-		-- optional for floating window border decoration
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 		},
@@ -137,14 +135,12 @@ return {
 			"DBUIFindBuffer",
 		},
 		init = function()
-			-- Your DBUI configuration
 			vim.g.db_ui_use_nerd_fonts = 1
 		end,
 		keys = {
 			{
-
 				"<leader>d",
-				"<cmd>tabnew<cr><bar><bar><cmd>DBUI<cr>",
+				"<cmd>tabnew<cr><bar><bar><cmd>DBUI<cr>", -- ✅ REMOVIDO NvimTreeClose
 			},
 		},
 	},
