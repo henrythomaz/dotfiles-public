@@ -1,0 +1,568 @@
+[1mdiff --git a/.config/nvim/lua/config/autocmds.lua b/.config/nvim/lua/config/autocmds.lua[m
+[1mindex 73d335b..8e3c50d 100644[m
+[1m--- a/.config/nvim/lua/config/autocmds.lua[m
+[1m+++ b/.config/nvim/lua/config/autocmds.lua[m
+[36m@@ -11,3 +11,48 @@[m [mvim.api.nvim_create_autocmd("FileType", {[m
+ 		vim.opt.conceallevel = 0[m
+ 	end,[m
+ })[m
+[32m+[m
+[32m+[m[32m-- Prevenir que neo-tree abra automaticamente ao abrir um diretório[m
+[32m+[m[32mvim.api.nvim_create_autocmd("VimEnter", {[m
+[32m+[m	[32mcallback = function(data)[m
+[32m+[m		[32m-- buffer é um diretório[m
+[32m+[m		[32mlocal directory = vim.fn.isdirectory(data.file) == 1[m
+[32m+[m
+[32m+[m		[32mif directory then[m
+[32m+[m			[32m-- Não fazer nada - deixar o dashboard ou tela vazia[m
+[32m+[m			[32m-- O usuário pode abrir manualmente com <leader>e[m
+[32m+[m			[32mreturn[m
+[32m+[m		[32mend[m
+[32m+[m	[32mend,[m
+[32m+[m[32m})[m
+[32m+[m[32m-- Turn off paste mode when leaving insert[m
+[32m+[m[32mvim.api.nvim_create_autocmd("InsertLeave", {[m
+[32m+[m	[32mpattern = "*",[m
+[32m+[m	[32mcommand = "set nopaste",[m
+[32m+[m[32m})[m
+[32m+[m
+[32m+[m[32m-- Disable the concealing in some file formats[m
+[32m+[m[32mvim.api.nvim_create_autocmd("FileType", {[m
+[32m+[m	[32mpattern = { "json", "jsonc", "markdown" },[m
+[32m+[m	[32mcallback = function()[m
+[32m+[m		[32mvim.opt.conceallevel = 0[m
+[32m+[m	[32mend,[m
+[32m+[m[32m})[m
+[32m+[m
+[32m+[m[32m-- 🚫 PREVENIR que neo-tree abra automaticamente ao abrir diretório[m
+[32m+[m[32mvim.api.nvim_create_autocmd("VimEnter", {[m
+[32m+[m	[32mcallback = function(data)[m
+[32m+[m		[32mlocal directory = vim.fn.isdirectory(data.file) == 1[m
+[32m+[m
+[32m+[m		[32mif directory then[m
+[32m+[m			[32m-- Fechar TODOS os buffers do neo-tree que foram abertos automaticamente[m
+[32m+[m			[32mvim.defer_fn(function()[m
+[32m+[m				[32mfor _, buf in ipairs(vim.api.nvim_list_bufs()) do[m
+[32m+[m					[32mif vim.bo[buf].filetype == "neo-tree" then[m
+[32m+[m						[32mvim.api.nvim_buf_delete(buf, { force = true })[m
+[32m+[m					[32mend[m
+[32m+[m				[32mend[m
+[32m+[m			[32mend, 10)[m
+[32m+[m		[32mend[m
+[32m+[m	[32mend,[m
+[32m+[m[32m})[m
+[1mdiff --git a/.config/nvim/lua/config/keymaps.lua b/.config/nvim/lua/config/keymaps.lua[m
+[1mindex e33804a..84a06b2 100644[m
+[1m--- a/.config/nvim/lua/config/keymaps.lua[m
+[1m+++ b/.config/nvim/lua/config/keymaps.lua[m
+[36m@@ -15,6 +15,9 @@[m [mkeymap.set("n", "<Leader>w", ":update<Return>", opts)[m
+ keymap.set("n", "<Leader>q", ":quit<Return>", opts)[m
+ keymap.set("n", "<Leader>Q", ":qa<Return>", opts)[m
+ [m
+[32m+[m[32m-- File explorer with Neo-tree[m
+[32m+[m[32mkeymap.set("n", "<Leader>e", "<cmd>Neotree toggle<cr>", opts)[m
+[32m+[m[32mkeymap.set("n", "<Leader>E", "<cmd>Neotree reveal<cr>", opts)[m
+ [m
+ -- Tabs[m
+ keymap.set("n", "te", ":tabedit")[m
+[1mdiff --git a/.config/nvim/lua/config/lazy.lua b/.config/nvim/lua/config/lazy.lua[m
+[1mindex c132d0e..3ee4a22 100644[m
+[1m--- a/.config/nvim/lua/config/lazy.lua[m
+[1m+++ b/.config/nvim/lua/config/lazy.lua[m
+[36m@@ -12,14 +12,15 @@[m [mend[m
+ vim.opt.rtp:prepend(lazypath)[m
+ [m
+ require("lazy").setup({[m
+[31m-  spec = {[m
+[31m-    {[m
+[31m-      "LazyVim/LazyVim",[m
+[32m+[m	[32mspec = {[m
+[32m+[m		[32m{[m
+[32m+[m			[32m"LazyVim/LazyVim",[m
+ 			import = "lazyvim.plugins",[m
+ 			opts = {[m
+[31m-        colorscheme = "sonokai",[m
+[32m+[m				[32mui = { backdrop = 100 },[m
+[32m+[m				[32mcolorscheme = "sonokai",[m
+ 				news = {[m
+[31m-          lazyvim = true,[m
+[32m+[m					[32mlazyvim = true,[m
+ 					neovim = true,[m
+ 				},[m
+ 			},[m
+[36m@@ -34,23 +35,23 @@[m [mrequire("lazy").setup({[m
+ 		{ import = "plugins" },[m
+ 	},[m
+ 	defaults = {[m
+[31m-    lazy = false,[m
+[32m+[m		[32mlazy = false,[m
+ 		version = false,[m
+ 	},[m
+ 	dev = {[m
+[31m-    path = "~/.ghq/github.com",[m
+[32m+[m		[32mpath = "~/.ghq/github.com",[m
+ 	},[m
+ 	checker = { enabled = true },[m
+[31m-  rocks = {[m
+[31m-    enabled = false,[m
+[31m-  },[m
+[32m+[m	[32mrocks = {[m
+[32m+[m		[32menabled = false,[m
+[32m+[m	[32m},[m
+ 	performance = {[m
+[31m-    cache = {[m
+[31m-      enabled = true,[m
+[32m+[m		[32mcache = {[m
+[32m+[m			[32menabled = true,[m
+ 		},[m
+ 		rtp = {[m
+[31m-      disabled_plugins = {[m
+[31m-        "gzip",[m
+[32m+[m			[32mdisabled_plugins = {[m
+[32m+[m				[32m"gzip",[m
+ 				-- "matchit",[m
+ 				-- "matchparen",[m
+ 				"netrwPlugin",[m
+[1mdiff --git a/.config/nvim/lua/plugins/neo-tree.lua b/.config/nvim/lua/plugins/neo-tree.lua[m
+[1mindex aeb277c..cd062b0 100644[m
+[1m--- a/.config/nvim/lua/plugins/neo-tree.lua[m
+[1m+++ b/.config/nvim/lua/plugins/neo-tree.lua[m
+[36m@@ -1,22 +1,23 @@[m
+ return {[m
+[31m-  "nvim-neo-tree/neo-tree.nvim",[m
+[31m-  opts = {[m
+[31m-    filesystem = {[m
+[31m-      filtered_items = {[m
+[31m-        hide_dotfiles = false,[m
+[31m-        hide_gitignored = false,[m
+[31m-      },[m
+[31m-[m
+[31m-      -- 🔥 ISSO AQUI É A CHAVE[m
+[31m-      enable_simple_view = true,[m
+[31m-[m
+[31m-      window = {[m
+[31m-        position = "left",[m
+[31m-        width = 30,[m
+[31m-      },[m
+[31m-    },[m
+[31m-[m
+[31m-    -- garante que NÃO abre outras views[m
+[31m-    sources = { "filesystem" },[m
+[31m-  },[m
+[32m+[m	[32m"nvim-neo-tree/neo-tree.nvim",[m
+[32m+[m	[32m-- 🚫 Desabilitar lazy loading para ter controle total[m
+[32m+[m	[32mlazy = true,[m
+[32m+[m	[32mkeys = {[m
+[32m+[m		[32m{ "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle Neo-tree" },[m
+[32m+[m		[32m{ "<leader>fe", "<cmd>Neotree reveal<cr>", desc = "Reveal in Neo-tree" },[m
+[32m+[m	[32m},[m
+[32m+[m	[32mopts = {[m
+[32m+[m		[32mfilesystem = {[m
+[32m+[m			[32mfiltered_items = {[m
+[32m+[m				[32mhide_dotfiles = false,[m
+[32m+[m				[32mhide_gitignored = false,[m
+[32m+[m			[32m},[m
+[32m+[m			[32menable_simple_view = true,[m
+[32m+[m			[32mwindow = {[m
+[32m+[m				[32mposition = "left",[m
+[32m+[m				[32mwidth = 30,[m
+[32m+[m			[32m},[m
+[32m+[m		[32m},[m
+[32m+[m		[32msources = { "filesystem" },[m
+[32m+[m	[32m},[m
+ }[m
+[1mdiff --git a/.config/nvim/lua/plugins/ui.lua.backup b/.config/nvim/lua/plugins/ui.lua.backup[m
+[1mnew file mode 100644[m
+[1mindex 0000000..4bdb845[m
+[1m--- /dev/null[m
+[1m+++ b/.config/nvim/lua/plugins/ui.lua.backup[m
+[36m@@ -0,0 +1,151 @@[m
+[32m+[m[32mreturn {[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"nvimdev/dashboard-nvim",[m
+[32m+[m		[32menabled = false,[m
+[32m+[m	[32m},[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"nvim-lualine/lualine.nvim",[m
+[32m+[m		[32menabled = false,[m
+[32m+[m	[32m},[m
+[32m+[m	[32m-- messages, cmdline and the popupmenu[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"folke/noice.nvim",[m
+[32m+[m		[32mopts = function(_, opts)[m
+[32m+[m			[32mtable.insert(opts.routes, {[m
+[32m+[m				[32mfilter = {[m
+[32m+[m					[32mevent = "notify",[m
+[32m+[m					[32mfind = "No information available",[m
+[32m+[m				[32m},[m
+[32m+[m				[32mopts = { skip = true },[m
+[32m+[m			[32m})[m
+[32m+[m			[32mlocal focused = true[m
+[32m+[m			[32mvim.api.nvim_create_autocmd("FocusGained", {[m
+[32m+[m				[32mcallback = function()[m
+[32m+[m					[32mfocused = true[m
+[32m+[m				[32mend,[m
+[32m+[m			[32m})[m
+[32m+[m			[32mvim.api.nvim_create_autocmd("FocusLost", {[m
+[32m+[m				[32mcallback = function()[m
+[32m+[m					[32mfocused = false[m
+[32m+[m				[32mend,[m
+[32m+[m			[32m})[m
+[32m+[m			[32mtable.insert(opts.routes, 1, {[m
+[32m+[m				[32mfilter = {[m
+[32m+[m					[32mcond = function()[m
+[32m+[m						[32mreturn not focused[m
+[32m+[m					[32mend,[m
+[32m+[m				[32m},[m
+[32m+[m				[32mview = "notify_send",[m
+[32m+[m				[32mopts = { stop = false },[m
+[32m+[m			[32m})[m
+[32m+[m
+[32m+[m			[32mopts.commands = {[m
+[32m+[m				[32mall = {[m
+[32m+[m					[32m-- options for the message history that you get with `:Noice`[m
+[32m+[m					[32mview = "split",[m
+[32m+[m					[32mopts = { enter = true, format = "details" },[m
+[32m+[m					[32mfilter = {},[m
+[32m+[m				[32m},[m
+[32m+[m			[32m}[m
+[32m+[m
+[32m+[m			[32mopts.presets.lsp_doc_border = true[m
+[32m+[m		[32mend,[m
+[32m+[m	[32m},[m
+[32m+[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"rcarriga/nvim-notify",[m
+[32m+[m		[32mopts = {[m
+[32m+[m			[32mtimeout = 5000,[m
+[32m+[m			[32mbackground_colour = "#000000",[m
+[32m+[m			[32mrender = "wrapped-compact",[m
+[32m+[m		[32m},[m
+[32m+[m	[32m},[m
+[32m+[m
+[32m+[m	[32m-- buffer line[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"akinsho/bufferline.nvim",[m
+[32m+[m		[32mevent = "VeryLazy",[m
+[32m+[m		[32mkeys = {[m
+[32m+[m			[32m{ "<Tab>", "<Cmd>BufferLineCycleNext<CR>", desc = "Next tab" },[m
+[32m+[m			[32m{ "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", desc = "Prev tab" },[m
+[32m+[m		[32m},[m
+[32m+[m		[32mopts = {[m
+[32m+[m			[32moptions = {[m
+[32m+[m				[32mmode = "tabs",[m
+[32m+[m				[32mshow_buffer_close_icons = false,[m
+[32m+[m				[32mshow_close_icon = false,[m
+[32m+[m			[32m},[m
+[32m+[m		[32m},[m
+[32m+[m	[32m},[m
+[32m+[m
+[32m+[m	[32m-- filename[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"b0o/incline.nvim",[m
+[32m+[m		[32mdependencies = {},[m
+[32m+[m		[32mevent = "BufReadPre",[m
+[32m+[m		[32mpriority = 1200,[m
+[32m+[m		[32mconfig = function()[m
+[32m+[m			[32mlocal helpers = require("incline.helpers")[m
+[32m+[m			[32mrequire("incline").setup({[m
+[32m+[m				[32mwindow = {[m
+[32m+[m					[32mpadding = 0,[m
+[32m+[m					[32mmargin = { horizontal = 0 },[m
+[32m+[m				[32m},[m
+[32m+[m				[32mrender = function(props)[m
+[32m+[m					[32mlocal filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")[m
+[32m+[m					[32mlocal ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)[m
+[32m+[m					[32mlocal modified = vim.bo[props.buf].modified[m
+[32m+[m					[32mlocal buffer = {[m
+[32m+[m						[32mft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) }[m
+[32m+[m							[32mor "",[m
+[32m+[m						[32m" ",[m
+[32m+[m						[32m{ filename, gui = modified and "bold,italic" or "bold" },[m
+[32m+[m						[32m" ",[m
+[32m+[m						[32mguibg = "#363944",[m
+[32m+[m					[32m}[m
+[32m+[m					[32mreturn buffer[m
+[32m+[m				[32mend,[m
+[32m+[m			[32m})[m
+[32m+[m		[32mend,[m
+[32m+[m	[32m},[m
+[32m+[m	[32m-- LazyGit integration with Telescope[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"kdheepak/lazygit.nvim",[m
+[32m+[m		[32mkeys = {[m
+[32m+[m			[32m{[m
+[32m+[m				[32m";c",[m
+[32m+[m				[32m":LazyGit<Return>",[m
+[32m+[m				[32msilent = true,[m
+[32m+[m				[32mnoremap = true,[m
+[32m+[m			[32m},[m
+[32m+[m		[32m},[m
+[32m+[m		[32m-- optional for floating window border decoration[m
+[32m+[m		[32mdependencies = {[m
+[32m+[m			[32m"nvim-lua/plenary.nvim",[m
+[32m+[m		[32m},[m
+[32m+[m	[32m},[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"kristijanhusak/vim-dadbod-ui",[m
+[32m+[m		[32mdependencies = {[m
+[32m+[m			[32m{ "tpope/vim-dadbod", lazy = true },[m
+[32m+[m			[32m{ "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },[m
+[32m+[m		[32m},[m
+[32m+[m		[32mcmd = {[m
+[32m+[m			[32m"DBUI",[m
+[32m+[m			[32m"DBUIToggle",[m
+[32m+[m			[32m"DBUIAddConnection",[m
+[32m+[m			[32m"DBUIFindBuffer",[m
+[32m+[m		[32m},[m
+[32m+[m		[32minit = function()[m
+[32m+[m			[32m-- Your DBUI configuration[m
+[32m+[m			[32mvim.g.db_ui_use_nerd_fonts = 1[m
+[32m+[m		[32mend,[m
+[32m+[m		[32mkeys = {[m
+[32m+[m			[32m{[m
+[32m+[m
+[32m+[m				[32m"<leader>d",[m
+[32m+[m				[32m"<cmd>tabnew<cr><bar><bar><cmd>DBUI<cr>",[m
+[32m+[m			[32m},[m
+[32m+[m		[32m},[m
+[32m+[m	[32m},[m
+[32m+[m[32m}[m
+[1mdiff --git a/.config/nvim/lua/plugins/ui.lua.bak b/.config/nvim/lua/plugins/ui.lua.bak[m
+[1mnew file mode 100644[m
+[1mindex 0000000..4bdb845[m
+[1m--- /dev/null[m
+[1m+++ b/.config/nvim/lua/plugins/ui.lua.bak[m
+[36m@@ -0,0 +1,151 @@[m
+[32m+[m[32mreturn {[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"nvimdev/dashboard-nvim",[m
+[32m+[m		[32menabled = false,[m
+[32m+[m	[32m},[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"nvim-lualine/lualine.nvim",[m
+[32m+[m		[32menabled = false,[m
+[32m+[m	[32m},[m
+[32m+[m	[32m-- messages, cmdline and the popupmenu[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"folke/noice.nvim",[m
+[32m+[m		[32mopts = function(_, opts)[m
+[32m+[m			[32mtable.insert(opts.routes, {[m
+[32m+[m				[32mfilter = {[m
+[32m+[m					[32mevent = "notify",[m
+[32m+[m					[32mfind = "No information available",[m
+[32m+[m				[32m},[m
+[32m+[m				[32mopts = { skip = true },[m
+[32m+[m			[32m})[m
+[32m+[m			[32mlocal focused = true[m
+[32m+[m			[32mvim.api.nvim_create_autocmd("FocusGained", {[m
+[32m+[m				[32mcallback = function()[m
+[32m+[m					[32mfocused = true[m
+[32m+[m				[32mend,[m
+[32m+[m			[32m})[m
+[32m+[m			[32mvim.api.nvim_create_autocmd("FocusLost", {[m
+[32m+[m				[32mcallback = function()[m
+[32m+[m					[32mfocused = false[m
+[32m+[m				[32mend,[m
+[32m+[m			[32m})[m
+[32m+[m			[32mtable.insert(opts.routes, 1, {[m
+[32m+[m				[32mfilter = {[m
+[32m+[m					[32mcond = function()[m
+[32m+[m						[32mreturn not focused[m
+[32m+[m					[32mend,[m
+[32m+[m				[32m},[m
+[32m+[m				[32mview = "notify_send",[m
+[32m+[m				[32mopts = { stop = false },[m
+[32m+[m			[32m})[m
+[32m+[m
+[32m+[m			[32mopts.commands = {[m
+[32m+[m				[32mall = {[m
+[32m+[m					[32m-- options for the message history that you get with `:Noice`[m
+[32m+[m					[32mview = "split",[m
+[32m+[m					[32mopts = { enter = true, format = "details" },[m
+[32m+[m					[32mfilter = {},[m
+[32m+[m				[32m},[m
+[32m+[m			[32m}[m
+[32m+[m
+[32m+[m			[32mopts.presets.lsp_doc_border = true[m
+[32m+[m		[32mend,[m
+[32m+[m	[32m},[m
+[32m+[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"rcarriga/nvim-notify",[m
+[32m+[m		[32mopts = {[m
+[32m+[m			[32mtimeout = 5000,[m
+[32m+[m			[32mbackground_colour = "#000000",[m
+[32m+[m			[32mrender = "wrapped-compact",[m
+[32m+[m		[32m},[m
+[32m+[m	[32m},[m
+[32m+[m
+[32m+[m	[32m-- buffer line[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"akinsho/bufferline.nvim",[m
+[32m+[m		[32mevent = "VeryLazy",[m
+[32m+[m		[32mkeys = {[m
+[32m+[m			[32m{ "<Tab>", "<Cmd>BufferLineCycleNext<CR>", desc = "Next tab" },[m
+[32m+[m			[32m{ "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", desc = "Prev tab" },[m
+[32m+[m		[32m},[m
+[32m+[m		[32mopts = {[m
+[32m+[m			[32moptions = {[m
+[32m+[m				[32mmode = "tabs",[m
+[32m+[m				[32mshow_buffer_close_icons = false,[m
+[32m+[m				[32mshow_close_icon = false,[m
+[32m+[m			[32m},[m
+[32m+[m		[32m},[m
+[32m+[m	[32m},[m
+[32m+[m
+[32m+[m	[32m-- filename[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"b0o/incline.nvim",[m
+[32m+[m		[32mdependencies = {},[m
+[32m+[m		[32mevent = "BufReadPre",[m
+[32m+[m		[32mpriority = 1200,[m
+[32m+[m		[32mconfig = function()[m
+[32m+[m			[32mlocal helpers = require("incline.helpers")[m
+[32m+[m			[32mrequire("incline").setup({[m
+[32m+[m				[32mwindow = {[m
+[32m+[m					[32mpadding = 0,[m
+[32m+[m					[32mmargin = { horizontal = 0 },[m
+[32m+[m				[32m},[m
+[32m+[m				[32mrender = function(props)[m
+[32m+[m					[32mlocal filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")[m
+[32m+[m					[32mlocal ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)[m
+[32m+[m					[32mlocal modified = vim.bo[props.buf].modified[m
+[32m+[m					[32mlocal buffer = {[m
+[32m+[m						[32mft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) }[m
+[32m+[m							[32mor "",[m
+[32m+[m						[32m" ",[m
+[32m+[m						[32m{ filename, gui = modified and "bold,italic" or "bold" },[m
+[32m+[m						[32m" ",[m
+[32m+[m						[32mguibg = "#363944",[m
+[32m+[m					[32m}[m
+[32m+[m					[32mreturn buffer[m
+[32m+[m				[32mend,[m
+[32m+[m			[32m})[m
+[32m+[m		[32mend,[m
+[32m+[m	[32m},[m
+[32m+[m	[32m-- LazyGit integration with Telescope[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"kdheepak/lazygit.nvim",[m
+[32m+[m		[32mkeys = {[m
+[32m+[m			[32m{[m
+[32m+[m				[32m";c",[m
+[32m+[m				[32m":LazyGit<Return>",[m
+[32m+[m				[32msilent = true,[m
+[32m+[m				[32mnoremap = true,[m
+[32m+[m			[32m},[m
+[32m+[m		[32m},[m
+[32m+[m		[32m-- optional for floating window border decoration[m
+[32m+[m		[32mdependencies = {[m
+[32m+[m			[32m"nvim-lua/plenary.nvim",[m
+[32m+[m		[32m},[m
+[32m+[m	[32m},[m
+[32m+[m	[32m{[m
+[32m+[m		[32m"kristijanhusak/vim-dadbod-ui",[m
+[32m+[m		[32mdependencies = {[m
+[32m+[m			[32m{ "tpope/vim-dadbod", lazy = true },[m
+[32m+[m			[32m{ "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },[m
+[32m+[m		[32m},[m
+[32m+[m		[32mcmd = {[m
+[32m+[m			[32m"DBUI",[m
+[32m+[m			[32m"DBUIToggle",[m
+[32m+[m			[32m"DBUIAddConnection",[m
+[32m+[m			[32m"DBUIFindBuffer",[m
+[32m+[m		[32m},[m
+[32m+[m		[32minit = function()[m
+[32m+[m			[32m-- Your DBUI configuration[m
+[32m+[m			[32mvim.g.db_ui_use_nerd_fonts = 1[m
+[32m+[m		[32mend,[m
+[32m+[m		[32mkeys = {[m
+[32m+[m			[32m{[m
+[32m+[m
+[32m+[m				[32m"<leader>d",[m
+[32m+[m				[32m"<cmd>tabnew<cr><bar><bar><cmd>DBUI<cr>",[m
+[32m+[m			[32m},[m
+[32m+[m		[32m},[m
+[32m+[m	[32m},[m
+[32m+[m[32m}[m
+[1mdiff --git a/e command from dadbod-ui keybinding b/e command from dadbod-ui keybinding[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a1e5ba1[m
+[1m--- /dev/null[m
+[1m+++ b/e command from dadbod-ui keybinding[m	
+[36m@@ -0,0 +1,75 @@[m
+[32m+[m[32m[1mdiff --git a/.config/nvim/lua/plugins/ui.lua b/.config/nvim/lua/plugins/ui.lua[m[m
+[32m+[m[32m[1mindex 674d1f0..4bdb845 100644[m[m
+[32m+[m[32m[1m--- a/.config/nvim/lua/plugins/ui.lua[m[m
+[32m+[m[32m[1m+++ b/.config/nvim/lua/plugins/ui.lua[m[m
+[32m+[m[32m[36m@@ -144,69 +144,8 @@[m [mreturn {[m[m
+[32m+[m[41m [m			[32m{[m[m
+[32m+[m[32m [m[m
+[32m+[m[41m [m				[32m"<leader>d",[m[m
+[32m+[m[32m[31m-				"<cmd>NvimTreeClose<cr><cmd>tabnew<cr><bar><bar><cmd>DBUI<cr>",[m[m
+[32m+[m[32m[32m+[m				[32m"<cmd>tabnew<cr><bar><bar><cmd>DBUI<cr>",[m[m
+[32m+[m[41m [m			[32m},[m[m
+[32m+[m[41m [m		[32m},[m[m
+[32m+[m[41m [m	[32m},[m[m
+[32m+[m[32m[31m-	{[m[m
+[32m+[m[32m[31m-		"nvim-tree/nvim-tree.lua",[m[m
+[32m+[m[32m[31m-		config = function()[m[m
+[32m+[m[32m[31m-			require("nvim-tree").setup({[m[m
+[32m+[m[32m[31m-				on_attach = function(bufnr)[m[m
+[32m+[m[32m[31m-					local api = require("nvim-tree.api")[m[m
+[32m+[m[32m[31m-[m[m
+[32m+[m[32m[31m-					local function opts(desc)[m[m
+[32m+[m[32m[31m-						return {[m[m
+[32m+[m[32m[31m-							desc = "nvim-tree: " .. desc,[m[m
+[32m+[m[32m[31m-							buffer = bufnr,[m[m
+[32m+[m[32m[31m-							noremap = true,[m[m
+[32m+[m[32m[31m-							silent = true,[m[m
+[32m+[m[32m[31m-							nowait = true,[m[m
+[32m+[m[32m[31m-						}[m[m
+[32m+[m[32m[31m-					end[m[m
+[32m+[m[32m[31m-[m[m
+[32m+[m[32m[31m-					-- default mappings[m[m
+[32m+[m[32m[31m-					api.config.mappings.default_on_attach(bufnr)[m[m
+[32m+[m[32m[31m-[m[m
+[32m+[m[32m[31m-					-- custom mappings[m[m
+[32m+[m[32m[31m-					vim.keymap.set("n", "t", api.node.open.tab, opts("Tab"))[m[m
+[32m+[m[32m[31m-				end,[m[m
+[32m+[m[32m[31m-				actions = {[m[m
+[32m+[m[32m[31m-					open_file = {[m[m
+[32m+[m[32m[31m-						quit_on_open = true,[m[m
+[32m+[m[32m[31m-					},[m[m
+[32m+[m[32m[31m-				},[m[m
+[32m+[m[32m[31m-				sort = {[m[m
+[32m+[m[32m[31m-					sorter = "case_sensitive",[m[m
+[32m+[m[32m[31m-				},[m[m
+[32m+[m[32m[31m-				view = {[m[m
+[32m+[m[32m[31m-					width = 30,[m[m
+[32m+[m[32m[31m-					relativenumber = true,[m[m
+[32m+[m[32m[31m-				},[m[m
+[32m+[m[32m[31m-				renderer = {[m[m
+[32m+[m[32m[31m-					group_empty = true,[m[m
+[32m+[m[32m[31m-				},[m[m
+[32m+[m[32m[31m-				filters = {[m[m
+[32m+[m[32m[31m-					dotfiles = true,[m[m
+[32m+[m[32m[31m-					custom = {[m[m
+[32m+[m[32m[31m-						"node_modules/.*",[m[m
+[32m+[m[32m[31m-					},[m[m
+[32m+[m[32m[31m-				},[m[m
+[32m+[m[32m[31m-				log = {[m[m
+[32m+[m[32m[31m-					enable = true,[m[m
+[32m+[m[32m[31m-					truncate = true,[m[m
+[32m+[m[32m[31m-					types = {[m[m
+[32m+[m[32m[31m-						diagnostics = true,[m[m
+[32m+[m[32m[31m-						git = true,[m[m
+[32m+[m[32m[31m-						profile = true,[m[m
+[32m+[m[32m[31m-						watcher = true,[m[m
+[32m+[m[32m[31m-					},[m[m
+[32m+[m[32m[31m-				},[m[m
+[32m+[m[32m[31m-			})[m[m
+[32m+[m[32m[31m-[m[m
+[32m+[m[32m[31m-			if vim.fn.argc(-1) == 0 then[m[m
+[32m+[m[32m[31m-				vim.cmd("NvimTreeFocus")[m[m
+[32m+[m[32m[31m-			end[m[m
+[32m+[m[32m[31m-		end,[m[m
+[32m+[m[32m[31m-	},[m[m
+[32m+[m[32m }[m[m
