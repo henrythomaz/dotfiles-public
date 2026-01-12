@@ -28,7 +28,7 @@
   - [wezterm](https://github.com/wez/wezterm) **_(Linux, Macos & Windows)_**
   - [alacritty](https://github.com/alacritty/alacritty) **_(Linux, Macos & Windows)_**
   - [iterm2](https://iterm2.com/) **_(Macos)_**
-- [Solarized Osaka](https://github.com/craftzdog/solarized-osaka.nvim)
+- [Solarized Osaka](https://github.com/craftzdog/solarized-osaka.nvim )
 
 ## Shell setup (macOS & Linux)
 
@@ -59,6 +59,6 @@ See the tutorials I used:
    - [Article version](https://www.devas.life/effective-neovim-setup-for-web-development-towards-2024/)
 1. [dev workflow using tmux and vim](https://www.youtube.com/watch?v=sSOfr2MtRU8&list=PLxQA0uNgQDCICMRwlOzWAZBPL05XBC_br&index=10)
 1. [A productive command-line Git workflow for indie app developers](https://www.youtube.com/watch?v=qKpY7t5m35k&list=PLxQA0uNgQDCICMRwlOzWAZBPL05XBC_br&index=4)
-   - [Blogpost](https://dev.to/craftzdog/a-productive-command-line-git-workflow-for-indie-app-developers-k7d)
+   - [Blogpost](https://dev.to/craftzdog/ a-productive-command-line-git-workflow-for-indie-app-developers-k7d)
 1. [Fish shell workflow for coding](https://www.youtube.com/watch?v=KKxhf50FIPI)
 1. [How to set up PowerShell prompt with Oh My Posh on Windows 11](https://www.youtube.com/watch?v=5-aK2_WwrmM)
