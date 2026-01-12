@@ -78,3 +78,8 @@ Pods/
 
 # Claude Code
 .claude/*.local.json
+
+# Nvim cache files
+.config/nvim/lazy-lock.json
+.config/nvim/lazyvim.json
+.config/nvim/.luarc.json
