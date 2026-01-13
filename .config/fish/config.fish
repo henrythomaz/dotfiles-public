@@ -126,22 +126,25 @@ function search
     end
 
     # 2) Modo email / Gmail:
-    #   search gmail henry@example.com Mensagem & Oi td bem!
+    #   search gmail email assunto corpo...
+    #   ex: search gmail natasha@gmail.com "Oi ÊEÊÊÊ" "oi, tudo bem?"
     if test "$argv[1]" = gmail
         set email $argv[2]
         set subject ""
         set body ""
 
         if test (count $argv) -ge 3
-            # tudo depois vira corpo
-            set body (string join " " $argv[3..-1])
+            set subject $argv[3]
+        end
+
+        if test (count $argv) -ge 4
+            set body (string join " " $argv[4..-1])
         end
 
         # encode simples de espaços pra %20
         set subject_enc (string replace " " "%20" $subject)
         set body_enc (string replace " " "%20" $body)
 
-        # abre compose do Gmail no navegador
         wslview "https://mail.google.com/mail/?view=cm&fs=1&to=$email&su=$subject_enc&body=$body_enc"
         return
     end
