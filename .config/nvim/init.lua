@@ -1,5 +1,6 @@
 require("config.netrw")
 require("config.kill-netrw")
+require("config.diagnostics")
 
 if vim.loader then
 	vim.loader.enable()
