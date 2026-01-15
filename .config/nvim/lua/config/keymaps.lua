@@ -78,6 +78,10 @@ keymap.set("n", "<C-w><right>", "<C-w>>")
 keymap.set("n", "<C-w><up>", "<C-w>+")
 keymap.set("n", "<C-w><down>", "<C-w>-")
 
+-- jk para sair do modo terminal
+keymap.set("t", "jk", "<C-\\><C-n>", opts)
+keymap.set("t", "kj", "<C-\\><C-n>", opts)
+
 -- ══════════════════════════════════════════════════════════
 -- Diagnostics e LSP (do craftzdog)
 -- ══════════════════════════════════════════════════════════
