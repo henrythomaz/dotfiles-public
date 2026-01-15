@@ -1,32 +1,57 @@
 return {
-	-- tools
+	-- ══════════════════════════════════════════════════════════
+	-- Mason - Gerenciador de LSP servers e tools
+	-- ══════════════════════════════════════════════════════════
 	{
-		"mason.nvim",
+		"mason-org/mason.nvim", -- craftzdog usa o correto
 		opts = function(_, opts)
 			vim.list_extend(opts.ensure_installed, {
-				"luacheck",
-				"shellcheck",
-				"shfmt",
+				-- Lua tools
+				"stylua", -- Formatter
+				"selene", -- Linter
+				"luacheck", -- Linter
+
+				-- Shell tools
+				"shellcheck", -- Linter
+				"shfmt", -- Formatter
+
+				-- Web dev LSP servers
 				"tailwindcss-language-server",
 				"typescript-language-server",
 				"css-lsp",
+				"html-lsp",
+
+				-- Adicione mais se precisar:
+				-- "prettier",
+				-- "eslint_d",
+				-- "json-lsp",
 			})
 		end,
 	},
 
-	-- lsp servers
+	-- ══════════════════════════════════════════════════════════
+	-- LSP Config - Configurações dos language servers
+	-- ══════════════════════════════════════════════════════════
 	{
 		"neovim/nvim-lspconfig",
 		opts = {
-			inlay_hints = { enabled = true },
+			-- Inlay hints - escolha true ou false
+			inlay_hints = { enabled = false }, -- craftzdog: false, JazzyGrim: true
+			-- Se ativar, use <leader>i para toggle (definido em keymaps)
+
 			---@type lspconfig.options
 			servers = {
+				-- CSS
 				cssls = {},
+
+				-- Tailwind CSS
 				tailwindcss = {
 					root_dir = function(...)
 						return require("lspconfig.util").root_pattern(".git")(...)
 					end,
 				},
+
+				-- TypeScript/JavaScript
 				tsserver = {
 					root_dir = function(...)
 						return require("lspconfig.util").root_pattern(".git")(...)
@@ -57,9 +82,21 @@ return {
 						},
 					},
 				},
+
+				-- HTML
 				html = {},
+
+				-- YAML (do craftzdog - útil!)
+				yamlls = {
+					settings = {
+						yaml = {
+							keyOrdering = false,
+						},
+					},
+				},
+
+				-- Lua
 				lua_ls = {
-					-- enabled = false,
 					single_file_support = true,
 					settings = {
 						Lua = {
@@ -71,9 +108,7 @@ return {
 								callSnippet = "Both",
 							},
 							misc = {
-								parameters = {
-									-- "--log-level=trace",
-								},
+								parameters = {},
 							},
 							hint = {
 								enable = true,
@@ -91,7 +126,6 @@ return {
 							},
 							diagnostics = {
 								disable = { "incomplete-signature-doc", "trailing-space" },
-								-- enable = false,
 								groupSeverity = {
 									strong = "Warning",
 									strict = "Warning",
@@ -127,6 +161,32 @@ return {
 			setup = {},
 		},
 	},
+
+	-- ══════════════════════════════════════════════════════════
+	-- LSP Keymaps FIX (do craftzdog - ESSENCIAL!)
+	-- Este fix resolve problemas de goto definition
+	-- ══════════════════════════════════════════════════════════
+	{
+		"neovim/nvim-lspconfig",
+		opts = function()
+			local keys = require("lazyvim.plugins.lsp.keymaps").get()
+			vim.list_extend(keys, {
+				{
+					"gd",
+					function()
+						-- NÃO REUTILIZA JANELA - previne bugs!
+						require("telescope.builtin").lsp_definitions({ reuse_win = false })
+					end,
+					desc = "Goto Definition",
+					has = "definition",
+				},
+			})
+		end,
+	},
+
+	-- ══════════════════════════════════════════════════════════
+	-- Emoji completion (do JazzyGrim - opcional mas legal!)
+	-- ══════════════════════════════════════════════════════════
 	{
 		"nvim-cmp",
 		dependencies = { "hrsh7th/cmp-emoji" },
