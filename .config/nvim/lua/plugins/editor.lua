@@ -1,8 +1,58 @@
 return {
-	-- Hihglight colors
+	-- ══════════════════════════════════════════════════════════
+	-- Flash.nvim (navegação rápida) - Opcional
+	-- ══════════════════════════════════════════════════════════
+	{
+		enabled = false, -- Habilite se quiser (tipo EasyMotion)
+		"folke/flash.nvim",
+		opts = {
+			search = {
+				forward = true,
+				multi_window = false,
+				wrap = false,
+				incremental = true,
+			},
+		},
+	},
+
+	-- ══════════════════════════════════════════════════════════
+	-- Highlight de cores (do craftzdog - mais completo!)
+	-- ══════════════════════════════════════════════════════════
+	{
+		"brenoprata10/nvim-highlight-colors",
+		event = "BufReadPre",
+		opts = {
+			render = "background", -- ou "foreground", "virtual"
+			enable_hex = true,
+			enable_short_hex = true,
+			enable_rgb = true,
+			enable_hsl = true,
+			enable_hsl_without_function = true,
+			enable_ansi = true,
+			enable_var_usage = true,
+			enable_tailwind = true, -- Essencial para web dev!
+		},
+	},
+
+	-- ══════════════════════════════════════════════════════════
+	-- Git Integration (do craftzdog)
+	-- ══════════════════════════════════════════════════════════
+	{
+		"dinhhuy258/git.nvim",
+		event = "BufReadPre",
+		opts = {
+			keymaps = {
+				blame = "<Leader>gb", -- Git blame
+				browse = "<Leader>go", -- Abrir no GitHub
+			},
+		},
+	},
+
+	-- ══════════════════════════════════════════════════════════
+	-- Telescope (combinado - melhor dos dois!)
+	-- ══════════════════════════════════════════════════════════
 	{
 		"nvim-telescope/telescope.nvim",
-		priority = 1000,
 		dependencies = {
 			{
 				"nvim-telescope/telescope-fzf-native.nvim",
@@ -11,6 +61,18 @@ return {
 			"nvim-telescope/telescope-file-browser.nvim",
 		},
 		keys = {
+			-- Find Plugin File (do craftzdog)
+			{
+				"<leader>fP",
+				function()
+					require("telescope.builtin").find_files({
+						cwd = require("lazy.core.config").options.root,
+					})
+				end,
+				desc = "Find Plugin File",
+			},
+
+			-- Find files
 			{
 				";f",
 				function()
@@ -22,14 +84,20 @@ return {
 				end,
 				desc = "Lists files in your current working directory, respects .gitignore",
 			},
+
+			-- Live grep (do craftzdog - com --hidden)
 			{
 				";r",
 				function()
 					local builtin = require("telescope.builtin")
-					builtin.live_grep()
+					builtin.live_grep({
+						additional_args = { "--hidden" },
+					})
 				end,
 				desc = "Search for a string in your current working directory and get results live as you type, respects .gitignore",
 			},
+
+			-- Buffers
 			{
 				"\\\\",
 				function()
@@ -38,6 +106,18 @@ return {
 				end,
 				desc = "Lists open buffers",
 			},
+
+			-- Help tags (do craftzdog)
+			{
+				";t",
+				function()
+					local builtin = require("telescope.builtin")
+					builtin.help_tags()
+				end,
+				desc = "Lists available help tags and opens a new window with the relevant help info on <cr>",
+			},
+
+			-- Resume
 			{
 				";;",
 				function()
@@ -46,6 +126,8 @@ return {
 				end,
 				desc = "Resume the previous telescope picker",
 			},
+
+			-- Diagnostics
 			{
 				";e",
 				function()
@@ -54,6 +136,8 @@ return {
 				end,
 				desc = "Lists Diagnostics for all open buffers or a specific buffer",
 			},
+
+			-- Treesitter
 			{
 				";s",
 				function()
@@ -62,11 +146,22 @@ return {
 				end,
 				desc = "Lists Function names, variables, from Treesitter",
 			},
+
+			-- LSP incoming calls (do craftzdog)
+			{
+				";c",
+				function()
+					local builtin = require("telescope.builtin")
+					builtin.lsp_incoming_calls()
+				end,
+				desc = "Lists LSP incoming calls for word under the cursor",
+			},
+
+			-- File Browser
 			{
 				"sf",
 				function()
 					local telescope = require("telescope")
-
 					local function telescope_buffer_dir()
 						return vim.fn.expand("%:p:h")
 					end
@@ -100,6 +195,7 @@ return {
 					n = {},
 				},
 			})
+
 			opts.pickers = {
 				diagnostics = {
 					theme = "ivy",
@@ -109,17 +205,18 @@ return {
 					},
 				},
 			}
+
 			opts.extensions = {
 				file_browser = {
 					theme = "dropdown",
-					-- disables netrw and use telescope-file-browser in its place
 					hijack_netrw = true,
 					mappings = {
-						-- your custom insert mode mappings
 						["n"] = {
-							-- your custom normal mode mappings
 							["N"] = fb_actions.create,
 							["h"] = fb_actions.goto_parent_dir,
+							["/"] = function() -- do craftzdog - entra em insert
+								vim.cmd("startinsert")
+							end,
 							["<C-u>"] = function(prompt_bufnr)
 								for i = 1, 10 do
 									actions.move_selection_previous(prompt_bufnr)
@@ -130,13 +227,59 @@ return {
 									actions.move_selection_next(prompt_bufnr)
 								end
 							end,
+							["<PageUp>"] = actions.preview_scrolling_up,
+							["<PageDown>"] = actions.preview_scrolling_down,
 						},
 					},
 				},
 			}
+
 			telescope.setup(opts)
 			require("telescope").load_extension("fzf")
 			require("telescope").load_extension("file_browser")
 		end,
+	},
+
+	-- ══════════════════════════════════════════════════════════
+	-- Close Buffers (do craftzdog - útil!)
+	-- ══════════════════════════════════════════════════════════
+	{
+		"kazhala/close-buffers.nvim",
+		event = "VeryLazy",
+		keys = {
+			{
+				"<leader>th",
+				function()
+					require("close_buffers").delete({ type = "hidden" })
+				end,
+				desc = "Close Hidden Buffers",
+			},
+			{
+				"<leader>tu",
+				function()
+					require("close_buffers").delete({ type = "nameless" })
+				end,
+				desc = "Close Nameless Buffers",
+			},
+		},
+	},
+
+	-- ══════════════════════════════════════════════════════════
+	-- Blink.cmp config (do craftzdog - transparência)
+	-- ══════════════════════════════════════════════════════════
+	{
+		"saghen/blink.cmp",
+		opts = {
+			completion = {
+				menu = {
+					winblend = vim.o.pumblend,
+				},
+			},
+			signature = {
+				window = {
+					winblend = vim.o.pumblend,
+				},
+			},
+		},
 	},
 }
