@@ -1,10 +1,16 @@
--- Turn off paste mode when leaving insert
+-- ══════════════════════════════════════════════════════════
+-- Auto-disable paste mode (do craftzdog)
+-- ══════════════════════════════════════════════════════════
 vim.api.nvim_create_autocmd("InsertLeave", {
 	pattern = "*",
 	command = "set nopaste",
 })
 
--- Disable the concealing in some file formats
+-- ══════════════════════════════════════════════════════════
+-- Disable concealing (do craftzdog - IMPORTANTE!)
+-- ══════════════════════════════════════════════════════════
+-- LazyVim esconde caracteres por padrão (conceallevel=3)
+-- Isso é ruim para JSON (esconde aspas) e Markdown (esconde *)
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "json", "jsonc", "markdown" },
 	callback = function()
@@ -12,47 +18,57 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- Prevenir que neo-tree abra automaticamente ao abrir um diretório
-vim.api.nvim_create_autocmd("VimEnter", {
-	callback = function(data)
-		-- buffer é um diretório
-		local directory = vim.fn.isdirectory(data.file) == 1
+-- ══════════════════════════════════════════════════════════
+-- Autocmds Adicionais Úteis (opcionais)
+-- ══════════════════════════════════════════════════════════
 
-		if directory then
-			-- Não fazer nada - deixar o dashboard ou tela vazia
-			-- O usuário pode abrir manualmente com <leader>e
-			return
-		end
-	end,
-})
--- Turn off paste mode when leaving insert
-vim.api.nvim_create_autocmd("InsertLeave", {
+-- Auto-format antes de salvar (se quiser)
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   pattern = "*",
+--   callback = function()
+--     vim.lsp.buf.format()
+--   end,
+-- })
+
+-- Highlight ao copiar (yank feedback visual)
+vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
-	command = "set nopaste",
-})
-
--- Disable the concealing in some file formats
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "json", "jsonc", "markdown" },
 	callback = function()
-		vim.opt.conceallevel = 0
+		vim.highlight.on_yank({ timeout = 200 })
 	end,
 })
 
--- 🚫 PREVENIR que neo-tree abra automaticamente ao abrir diretório
-vim.api.nvim_create_autocmd("VimEnter", {
-	callback = function(data)
-		local directory = vim.fn.isdirectory(data.file) == 1
+-- Remove trailing whitespace ao salvar
+vim.api.nvim_create_autocmd("BufWritePre", {
+	pattern = "*",
+	callback = function()
+		local cursor_pos = vim.api.nvim_win_get_cursor(0)
+		vim.cmd([[%s/\s\+$//e]])
+		vim.api.nvim_win_set_cursor(0, cursor_pos)
+	end,
+})
 
-		if directory then
-			-- Fechar TODOS os buffers do neo-tree que foram abertos automaticamente
-			vim.defer_fn(function()
-				for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-					if vim.bo[buf].filetype == "neo-tree" then
-						vim.api.nvim_buf_delete(buf, { force = true })
-					end
-				end
-			end, 10)
-		end
+-- Auto-resize splits quando redimensionar janela
+vim.api.nvim_create_autocmd("VimResized", {
+	pattern = "*",
+	command = "wincmd =",
+})
+
+-- Fechar certos tipos de janela com 'q'
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = {
+		"qf",
+		"help",
+		"man",
+		"notify",
+		"lspinfo",
+		"spectre_panel",
+		"startuptime",
+		"tsplayground",
+		"PlenaryTestPopup",
+	},
+	callback = function(event)
+		vim.bo[event.buf].buflisted = false
+		vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
 	end,
 })
