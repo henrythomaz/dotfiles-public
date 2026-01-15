@@ -52,9 +52,9 @@ return {
 				},
 
 				-- TypeScript/JavaScript
-				tsserver = {
+				ts_ls = {
 					root_dir = function(...)
-						return require("lspconfig.util").root_pattern(".git")(...)
+						return require("lspconfig.util").root_pattern("tsconfig.json", "package.json")(...)
 					end,
 					single_file_support = false,
 					settings = {
