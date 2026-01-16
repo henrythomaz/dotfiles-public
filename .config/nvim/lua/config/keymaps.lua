@@ -102,6 +102,18 @@ vim.api.nvim_create_user_command("ToggleAutoformat", function()
 	require("craftzdog.lsp").toggleAutoformat()
 end, {})
 
-keymap.set("n", ";t", function()
+keymap.set("n", "<leader>t", function()
 	floaterminal.toggle()
 end)
+
+-- Comentário com Ctrl+; no modo NORMAL
+vim.keymap.set("n", "<C-;>", function()
+	require("Comment.api").toggle.linewise.current()
+end, { desc = "Toggle comment line (Ctrl+;)" })
+
+-- Comentário com Ctrl+; no modo VISUAL
+vim.keymap.set("v", "<C-;>", function()
+	local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+	vim.api.nvim_feedkeys(esc, "nx", false)
+	require("Comment.api").toggle.linewise(vim.fn.visualmode())
+end, { desc = "Toggle comment selection (Ctrl+;)" })
