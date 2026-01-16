@@ -97,12 +97,3 @@ vim.cmd([[au BufNewFile,BufRead *.jsx setf javascriptreact]])
 
 -- Python configs
 vim.cmd([[au BufNewFile,BufRead *.py setlocal shiftwidth=4 tabstop=4]])
-
--- ══════════════════════════════════════════════════════════
--- Debug helper (opcional)
--- ══════════════════════════════════════════════════════════
-_G.dd = function(...)
-	require("craftzdog.debug").dump(...)
-end
-
-vim.print = _G.dd -- Alias para vim.print()

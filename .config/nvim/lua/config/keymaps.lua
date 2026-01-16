@@ -4,6 +4,8 @@ discipline.cowboy()
 local keymap = vim.keymap
 local opts = { noremap = true, silent = true }
 
+local floaterminal = require("craftzdog.floaterminal")
+
 -- ══════════════════════════════════════════════════════════
 -- Proteção de Registers (do craftzdog - essencial!)
 -- ══════════════════════════════════════════════════════════
@@ -41,8 +43,7 @@ keymap.set("n", "<Leader>Q", ":qa<Return>", opts)
 -- File Explorer (adapte para o que você usar)
 -- ══════════════════════════════════════════════════════════
 -- Se usar NvimTree (JazzyGrim style):
-keymap.set("n", "<Leader>f", ":NvimTreeFindFile<Return>", opts)
-keymap.set("n", "<Leader>t", ":NvimTreeToggle<Return>", opts)
+keymap.set("n", "<Leader>f", ":NvimTreeToggle<Return>", opts)
 -- Se usar neo-tree (LazyVim default), comente as linhas acima
 
 -- ══════════════════════════════════════════════════════════
@@ -100,3 +101,7 @@ end)
 vim.api.nvim_create_user_command("ToggleAutoformat", function()
 	require("craftzdog.lsp").toggleAutoformat()
 end, {})
+
+keymap.set("n", ";t", function()
+	floaterminal.toggle()
+end)
