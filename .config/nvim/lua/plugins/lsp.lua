@@ -20,11 +20,9 @@ return {
 				"typescript-language-server",
 				"css-lsp",
 				"html-lsp",
-
-				-- Adicione mais se precisar:
-				-- "prettier",
-				-- "eslint_d",
-				-- "json-lsp",
+				"prettier",
+				"eslint_d",
+				"json-lsp",
 			})
 		end,
 	},
