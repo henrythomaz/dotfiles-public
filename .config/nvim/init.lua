@@ -8,4 +8,6 @@ end
 
 vim.print = _G.dd
 
+vim.g.editorconfig = true
+
 require("config.lazy")
