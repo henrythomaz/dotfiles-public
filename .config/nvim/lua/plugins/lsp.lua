@@ -32,13 +32,34 @@ return {
 	-- ══════════════════════════════════════════════════════════
 	{
 		"neovim/nvim-lspconfig",
-		opts = {
+		opts = function(_, opts)
 			-- Inlay hints - escolha true ou false
-			inlay_hints = { enabled = false }, -- craftzdog: false, JazzyGrim: true
+			opts.inlay_hints = { enabled = false } -- craftzdog: false, JazzyGrim: true
 			-- Se ativar, use <leader>i para toggle (definido em keymaps)
 
+			-- Desabilita LSP para buffers do DBUI
+			opts.setup = opts.setup or {}
+
+			local on_attach_original = opts.on_attach
+			opts.on_attach = function(client, bufnr)
+				local bufname = vim.api.nvim_buf_get_name(bufnr)
+
+				-- Não anexa LSP em buffers do DBUI
+				if bufname:match("^dbui://") or bufname:match("%-List%-%d") or bufname:match("%-Columns%-") then
+					vim.schedule(function()
+						vim.lsp.buf_detach_client(bufnr, client.id)
+					end)
+					return
+				end
+
+				-- Chama o on_attach original se existir
+				if on_attach_original then
+					on_attach_original(client, bufnr)
+				end
+			end
+
 			---@type lspconfig.options
-			servers = {
+			opts.servers = {
 				-- CSS
 				cssls = {},
 
@@ -155,9 +176,10 @@ return {
 						},
 					},
 				},
-			},
-			setup = {},
-		},
+			}
+
+			return opts
+		end,
 	},
 
 	-- ══════════════════════════════════════════════════════════
@@ -193,3 +215,4 @@ return {
 		end,
 	},
 }
+

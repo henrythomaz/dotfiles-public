@@ -282,28 +282,74 @@ return {
 	-- Descomente se trabalhar com databases
 	-- ══════════════════════════════════════════════════════════
 	{
-		"kristijanhusak/vim-dadbod-ui",
-		dependencies = {
-			{ "tpope/vim-dadbod", lazy = true },
-			{ "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
-		},
-		cmd = {
-			"DBUI",
-			"DBUIToggle",
-			"DBUIAddConnection",
-			"DBUIFindBuffer",
-		},
-		init = function()
-			vim.g.db_ui_use_nerd_fonts = 1
-		end,
-		keys = {
-			{
-				"<leader>db",
-				"<cmd>NvimTreeClose<cr><cmd>tabnew<cr><bar><bar><cmd>DBUI<cr>",
-				desc = "Database UI",
-			},
-		},
+	"kristijanhusak/vim-dadbod-ui",
+	dependencies = {
+		{ "tpope/vim-dadbod", lazy = true },
+		{ "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
 	},
+	cmd = {
+		"DBUI",
+		"DBUIToggle",
+		"DBUIAddConnection",
+		"DBUIFindBuffer",
+	},
+	init = function()
+		-- Configurações globais do DBUI
+		vim.g.db_ui_use_nerd_fonts = 1
+		vim.g.db_ui_execute_on_save = 0
+		vim.g.db_ui_show_database_icon = 1
+		vim.g.db_ui_force_echo_notifications = 1
+		vim.g.db_ui_winwidth = 30
+		vim.g.db_ui_auto_execute_table_helpers = 1
+		vim.g.db_ui_use_nvim_notify = 1
+
+		-- Desabilita LSP para a sidebar do DBUI
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "dbui",
+			callback = function(event)
+				vim.diagnostic.disable(event.buf)
+				vim.bo[event.buf].buflisted = false
+			end,
+		})
+
+		-- Configurações para buffers SQL do DBUI
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = { "sql", "mysql", "plsql" },
+			callback = function(event)
+				local bufname = vim.api.nvim_buf_get_name(event.buf)
+
+				-- Se for buffer do DBUI (List, Columns, ou queries temporárias)
+				if bufname:match("^dbui://") or bufname:match("%-List%-") or bufname:match("%-Columns%-") then
+					-- Torna o buffer editável
+					vim.bo[event.buf].modifiable = true
+					vim.bo[event.buf].readonly = false
+					vim.bo[event.buf].buftype = "nofile"
+
+					-- Desabilita LSP e diagnostics
+					vim.diagnostic.disable(event.buf)
+					vim.b[event.buf].autoformat = false
+
+					-- Desanexa LSP clients
+					vim.defer_fn(function()
+						local clients = vim.lsp.get_clients({ bufnr = event.buf })
+						for _, client in ipairs(clients) do
+							vim.lsp.buf_detach_client(event.buf, client.id)
+						end
+					end, 100)
+				end
+
+				-- Keymaps para executar queries (para TODOS os buffers SQL)
+				vim.keymap.set("n", "<C-CR>", "<Plug>(DBUI_ExecuteQuery)", { buffer = event.buf, silent = true })
+				vim.keymap.set("v", "<C-CR>", "<Plug>(DBUI_ExecuteQuery)", { buffer = event.buf, silent = true })
+				vim.keymap.set("n", "S", "<Plug>(DBUI_SaveQuery)", { buffer = event.buf, silent = true })
+				vim.keymap.set("n", "R", "<Plug>(DBUI_Redraw)", { buffer = event.buf, silent = true })
+			end,
+		})
+	end,
+	keys = {
+		{ "<leader>pq", "<cmd>NvimTreeClose<cr><cmd>tabnew<cr><bar><bar><cmd>DBUI<cr>", desc = "Database UI" },
+	},
+},
 
 	-- Disable render-markdown (do craftzdog)
 	{
