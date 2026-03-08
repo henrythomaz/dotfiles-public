@@ -187,22 +187,22 @@ return {
 	-- Este fix resolve problemas de goto definition
 	-- ══════════════════════════════════════════════════════════
 	{
-		"neovim/nvim-lspconfig",
-		opts = function()
-			local keys = require("lazyvim.plugins.lsp.keymaps").get()
-			vim.list_extend(keys, {
-				{
-					"gd",
-					function()
-						-- NÃO REUTILIZA JANELA - previne bugs!
-						require("telescope.builtin").lsp_definitions({ reuse_win = false })
-					end,
-					desc = "Goto Definition",
-					has = "definition",
-				},
-			})
-		end,
-	},
+  "neovim/nvim-lspconfig",
+  opts = function(_, opts)
+    local keys = require("lazyvim.plugins.lsp.keymaps").get()
+    vim.list_extend(keys, {
+      {
+        "gd",
+        function()
+          require("telescope.builtin").lsp_definitions({ reuse_win = false })
+        end,
+        desc = "Goto Definition",
+        has = "definition",
+      },
+    })
+    return opts
+  end,
+},
 
 	-- ══════════════════════════════════════════════════════════
 	-- Emoji completion (do JazzyGrim - opcional mas legal!)

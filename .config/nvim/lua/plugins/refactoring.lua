@@ -1,24 +1,5 @@
 return {
 	-- ══════════════════════════════════════════════════════════
-	-- Incremental Rename (já temos no coding.lua)
-	-- ══════════════════════════════════════════════════════════
-	{
-		"smjonas/inc-rename.nvim",
-		cmd = "IncRename",
-		keys = {
-			{
-				"<leader>rn",
-				function()
-					return ":IncRename " .. vim.fn.expand("<cword>")
-				end,
-				desc = "Incremental rename",
-				expr = true,
-			},
-		},
-		config = true,
-	},
-
-	-- ══════════════════════════════════════════════════════════
 	-- Refactoring.nvim - Refatorações automáticas
 	-- ══════════════════════════════════════════════════════════
 	{

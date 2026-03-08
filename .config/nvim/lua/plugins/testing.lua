@@ -12,9 +12,9 @@ return {
 			-- Adapters (adicione o que você usa)
 			"nvim-neotest/neotest-jest", -- JavaScript/TypeScript
 			"nvim-neotest/neotest-plenary", -- Lua
-			-- "nvim-neotest/neotest-python",  -- Python
-			-- "nvim-neotest/neotest-go",      -- Go
-			-- "nvim-neotest/neotest-rust",    -- Rust
+			"nvim-neotest/neotest-python",  -- Python
+			"nvim-neotest/neotest-go",      -- Go
+			"rouge8/neotest-rust",    -- Rust
 		},
 		opts = {
 			adapters = {
