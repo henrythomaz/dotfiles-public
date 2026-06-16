@@ -6,6 +6,8 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 	command = "set nopaste",
 })
 
+-- 
+
 -- ══════════════════════════════════════════════════════════
 -- Disable concealing (do craftzdog - IMPORTANTE!)
 -- ══════════════════════════════════════════════════════════

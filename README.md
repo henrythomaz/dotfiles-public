@@ -710,3 +710,5 @@ Essas configs foram inspiradas/tiradas destes conteúdos:
 Essas configs são feitas para o **meu** fluxo, em Linux/macOS com terminal moderno e Windows via PowerShell. Use como referência, copie pedaços e adapte ao seu estilo.
 
 Se quiser, abra issues ou PRs no repositório com sugestões de melhorias.
+
+---
